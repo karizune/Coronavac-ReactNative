@@ -3,6 +3,14 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 
 export default function App() {
   const [txtIdadeAnos, SetIdade] = React.useState('');
+  function clickMe() {
+    if (parseInt(txtIdadeAnos) >= 18) {
+      alert('Pode ser preso')
+    }
+    else {
+      alert('ainda não pode ser preso')
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -12,10 +20,12 @@ export default function App() {
           placeholder="Digite sua idade"
           style={styles.textInput}
           onChangeText={(text) => { SetIdade(text); }}
+          value={txtIdadeAnos}
         ></TextInput>
         <TouchableOpacity
           style={styles.buttonClickMe}
           activeOpacity={0.7}
+          onPress={clickMe}
         >
           <Text style={styles.textButton}>Clique aqui</Text>
         </TouchableOpacity>
