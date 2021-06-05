@@ -18,14 +18,38 @@ const FormStyles = StyleSheet.create({
     },
     textInput: {
         height: 40,
+        borderWidth: 1,
+        borderColor: 'gray',
+        width: 250,
+        marginBottom: 16,
+        paddingHorizontal: 8,
+        textAlign: 'center',
+        borderRadius: 10
+    },
+    textInputUser: {
+        height: 40,
+        borderWidth: 0,
+        width: 250,
+        marginBottom: 16,
+        paddingHorizontal: 8,
+    },
+    textInputPassword: {
+        height: 40,
+        borderWidth: 0,
+        width: '84%',
+        marginBottom: 16,
+        paddingHorizontal: 8,
+    },
+    FormContainer: {
+        marginBottom: 16,
+        height: 40,
         borderColor: 'gray',
         borderRadius: 8,
         borderWidth: 1,
-        width: 230,
-        textAlign: 'center',
-        marginBottom: 16,
+        width: '70%',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     }
-
 });
 
 export default FormStyles;

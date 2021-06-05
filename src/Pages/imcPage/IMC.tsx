@@ -21,7 +21,8 @@ export default function Page1() {
     const [txtPeso, SetPeso] = React.useState('');
     const [txtAltura, SetAltura] = React.useState('');
     const [classificacao, SetClassificacao] = React.useState('');
-    const [TextColor, SetColor] = React.useState('black');
+    const [TextColor, SetColor] = React.useState('white');
+    const [bgcolor, Setbgcolor] = React.useState('black');
 
     const navigation = useNavigation();
     function backToWelcome() {
@@ -56,7 +57,7 @@ export default function Page1() {
         }
         else {
             SetClassificacao('desconhecido');
-            SetColor('black');
+            SetColor('White');
         }
     }
 
@@ -66,14 +67,12 @@ export default function Page1() {
                 <View style={styles.container}>
                     <View style={styles.form}>
                         <Text style={styles.TextHello}>Olá Luan</Text>
-                        <Text style={styles.simpleText}>Digite seu peso</Text>
                         <TextInput
                             placeholder="Digite Peso"
                             style={styles.textInput}
                             onChangeText={(text) => { SetPeso(text); }}
                             value={txtPeso}
                         ></TextInput>
-                        <Text style={styles.simpleText}>Digite sua altura</Text>
                         <TextInput
                             placeholder="Digite Altura"
                             style={styles.textInput}
@@ -87,7 +86,9 @@ export default function Page1() {
                         >
                             <Text style={styles.textButton}>Calcular IMC</Text>
                         </TouchableOpacity>
-                        <Text style={{ color: TextColor, paddingTop: 10, fontSize: 18 }}>{classificacao}</Text>
+                        <Text></Text>
+                        <Text style={{ color: TextColor, backgroundColor: bgcolor, fontSize: 18 }}>{classificacao}</Text>
+                        <Text></Text>
                         <TouchableOpacity
                             style={styles.backButton}
                             activeOpacity={0.7}
