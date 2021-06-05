@@ -1,16 +1,7 @@
 import React from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-    TouchableOpacityProps
-} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { Button, ButtonProps } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
-
-
 
 export function CircleButton({ title, ...rest }: ButtonProps) {
 
@@ -26,7 +17,6 @@ export function CircleButton({ title, ...rest }: ButtonProps) {
         </>
     );
 }
-
 
 const styles = StyleSheet.create({
     ButtonStyle: {
