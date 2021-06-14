@@ -6,7 +6,9 @@ import {
     View,
     Image,
     Alert,
-    StyleSheet
+    StyleSheet,
+    SafeAreaView,
+    KeyboardAvoidingView
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { TextInput } from 'react-native-gesture-handler';
@@ -26,7 +28,7 @@ interface PasswordConfig {
 }
 
 interface LoginProps {
-    login: string,
+    email: string,
     senha: string
 }
 
@@ -36,7 +38,7 @@ export default function Login() {
     const [txtSenha, setSenha] = React.useState('')
     const [flLoading, setLoading] = React.useState(false)
     const [objPasswordConfig, setConfigForm] = React.useState<PasswordConfig>
-        ({ flShowPass: false, iconPass: 'eye' });
+        ({ flShowPass: true, iconPass: 'eye-off' });
 
     function handleChangeIcon() {
         let icone = objPasswordConfig.iconPass === "eye" ? "eye-off" : "eye";
@@ -44,8 +46,10 @@ export default function Login() {
         setConfigForm({ iconPass: icone, flShowPass });
     }
 
-    async function navigateToInitialPage() {
-        let objLogin: LoginProps = { login: txtLogin, senha: txtSenha };
+
+    async function RealizeLogin() {
+        let errors: Array<string> = []
+        let objLogin: LoginProps = { email: txtLogin, senha: txtSenha };
         if (txtLogin.trim() === '') {
             Alert.alert('Atenção: Falha no Login', 'Usuário é obrigatório');
             return;
@@ -54,20 +58,27 @@ export default function Login() {
             Alert.alert('Atenção: Falha no Login', 'Senha é obrigatório');
             return;
         }
-        /* uso da api, ta travando o app por nao ter retorno, teste no insominia ok
         setLoading(true);
-        const response = await api.post(`/paciente/Login`, objLogin);
-        if (response.data.auth) {
-            alert('Login e senha OK!');
-        }
-        else {
-            alert('Login e/ou senha inválidos');
-        }
-        setLoading(false);
-        */
-        navigation.navigate('initialPage');
-        Alert.alert('AVISO!!!!!', 'esse aplicativo é apenas uma versão de demonstração')
+
+
+        await api.post(`/paciente/Login`, objLogin)
+            .then((response) => {
+                if (response.data.auth) {
+                    navigateToInitialPage();
+                    setLoading(false);
+                }
+            }).catch(e => {
+                Object.values(e.response.data).map((item) => {
+                    errors.push(`${item}`);
+                })
+                setLoading(false)
+                Alert.alert('Aviso', `${errors}`)
+            })
     }
+
+    function navigateToInitialPage() {
+        navigation.navigate('initialPage');
+    };
 
     function navigateToResetPassword() {
         navigation.navigate('ResetPassword');
@@ -82,7 +93,7 @@ export default function Login() {
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Image
                 style={{ width: '50%', height: '30%' }}
                 source={require('../../resources/injection.jpg')}
@@ -94,7 +105,7 @@ export default function Login() {
                 <View style={FormStyles.FormContainer}>
                     <TextInput
                         style={FormStyles.textInputUser}
-                        placeholder={'Digite seu usuário'}
+                        placeholder={'Digite seu email'}
                         onChangeText={text => setLogin(text)}
                         value={txtLogin}
                     ></TextInput>
@@ -118,7 +129,7 @@ export default function Login() {
             </View>
             <CustomButton
                 title={'Entrar'}
-                onPress={navigateToInitialPage}
+                onPress={RealizeLogin}
             />
             <TextButton
                 title={'Esqueceu a senha?'}
@@ -132,7 +143,7 @@ export default function Login() {
                     onPress={navigateToRegister}
                 />
             </View>
-        </View>
+        </SafeAreaView>
     );
 }
 
