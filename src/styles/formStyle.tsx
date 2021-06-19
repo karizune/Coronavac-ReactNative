@@ -23,7 +23,6 @@ const FormStyles = StyleSheet.create({
         width: 250,
         marginBottom: 16,
         paddingHorizontal: 8,
-        textAlign: 'center',
         borderRadius: 10
     },
     textInputUser: {

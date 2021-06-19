@@ -21,11 +21,7 @@ import FormStyles from '../../Styles/formStyle';
 import Loading from '../../Components/Loading/Loading';
 import { CustomButton } from '../../Components/Buttons/CustomButton/CustomButton'
 import { TextButton } from '../../Components/Buttons/TextButton/TextButton'
-
-interface PasswordConfig {
-    flShowPass: boolean,
-    iconPass: any
-}
+import { PasswordTextInput } from '../../Components/TextInputs/PasswordInput/PasswordInput'
 
 interface LoginProps {
     email: string,
@@ -48,19 +44,11 @@ export default function Login() {
     const [txtLogin, setLogin] = React.useState('')
     const [txtSenha, setSenha] = React.useState('')
     const [flLoading, setLoading] = React.useState(false)
-    const [objPasswordConfig, setConfigForm] = React.useState<PasswordConfig>
-        ({ flShowPass: true, iconPass: 'eye-off' });
+
 
     const [userLogged, setUserLogged] = React.useState<UserLoggedProps>({ nome: '', email: '', senha: '' });
 
     const backgroundImage = { uri: 'https://acegif.com/wp-content/gif/outerspace-54.gif' }
-
-    function handleChangeIcon() {
-        let icone = objPasswordConfig.iconPass === "eye" ? "eye-off" : "eye";
-        let flShowPass = !objPasswordConfig.flShowPass;
-        setConfigForm({ iconPass: icone, flShowPass });
-    }
-
 
     async function RealizeLogin() {
         let errors: Array<string> = []
@@ -132,22 +120,11 @@ export default function Login() {
                             value={txtLogin}
                         />
                     </View>
-                    <View style={FormStyles.FormContainer}>
-                        <TextInput
-                            style={FormStyles.textInputPassword}
-                            placeholder="Senha"
-                            onChangeText={text => setSenha(text)}
-                            value={txtSenha}
-                            secureTextEntry={objPasswordConfig.flShowPass}
-                        />
-                        <Feather
-                            style={LoginStyles.iconEye}
-                            name={objPasswordConfig.iconPass}
-                            size={25}
-                            color={'red'}
-                            onPress={handleChangeIcon}
-                        />
-                    </View>
+                    <PasswordTextInput
+                        placeholder="Senha"
+                        onChangeText={text => setSenha(text)}
+                        value={txtSenha}
+                    ></PasswordTextInput>
                 </View>
                 <CustomButton
                     title={'Entrar'}

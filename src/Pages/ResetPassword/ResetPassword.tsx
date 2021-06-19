@@ -12,21 +12,65 @@ import FormStyles from '../../Styles/formStyle';
 import { TextInput } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/AntDesign';
 import api from '../../Services/api';
+import Loading from '../../Components/Loading/Loading';
+import { PasswordTextInput } from '../../Components/TextInputs/PasswordInput/PasswordInput';
+
+
+interface ResetSenhaConfig {
+    email: string,
+    senha: string
+}
 
 export default function Register() {
+
+    const [flLoading, setLoading] = React.useState(false);
+    const [email, setEmail] = React.useState<string>('');
+    const [senha, setSenha] = React.useState<string>('');
+    const [senhaConfirm, setSenhaConfirm] = React.useState<string>('');
     const navigation = useNavigation();
+
+    if (flLoading) {
+        return (<Loading />);
+    }
 
     function backToWelcome() {
         navigation.navigate('Login');
     }
 
-    async function redefinirSenha(cadastroAtualizado: object) {
-        await api.put(``, cadastroAtualizado)
-        Alert.alert(
-            '',
-            'Senha redefinida',
-        );
-        navigation.navigate('Login');
+    async function redefinirSenha() {
+        let errors: Array<string> = [];
+        let SenhaAlterada: ResetSenhaConfig = {
+            "email": email,
+            "senha": senha,
+        }
+
+        if (senha != senhaConfirm) {
+            errors.push('\n\nSenhas não coincidem')
+        }
+        if (senhaConfirm.trim() === '' && senha.trim() != '') {
+            errors.push('\n\nÉ obrigatório digitar novamente a senha')
+        }
+
+        setLoading(true)
+        await api.put(`/paciente/RecuperaSenha`, SenhaAlterada)
+            .then(() => {
+                setLoading(false);
+                Alert.alert('Aviso', 'Senha redefinida');
+                navigation.navigate('Login');
+            })
+            .catch((e) => {
+                if (e.response.data != undefined && e.response.data.errors != undefined) {
+                    Object.values(e.response.data.errors).map((item: any) => {
+                        errors.push(`\n\n${Object.values(item)}`);
+                    })
+                    Alert.alert('Aviso: Verifique os erros a seguir', `${errors}`)
+                }
+                else if (e.response.data.Message != null) {
+                    Alert.alert('Aviso', `${e.response.data.Message}`)
+
+                }
+                setLoading(false)
+            })
     }
 
     return (
@@ -35,16 +79,30 @@ export default function Register() {
             <Text></Text>
             <Text style={styles.TextHello}>{'Redefinir senha'}</Text>
             <Text></Text>
-            <View style={FormStyles.form}>
-                <TextInput style={FormStyles.textInput} placeholder={'Digite seu email'}></TextInput>
-                <TextInput style={FormStyles.textInput} secureTextEntry={true} placeholder={'Digite sua nova senha'}></TextInput>
-                <TextInput style={FormStyles.textInput} secureTextEntry={true} placeholder={'Digite novamente a nova senha'}></TextInput>
-                <Text></Text>
+            <View>
+                <View style={FormStyles.form}>
+                    <TextInput
+                        style={FormStyles.textInput}
+                        placeholder={'Digite seu email'}
+                        onChangeText={(value) => { setEmail(value) }}
+                        value={email}
+                    ></TextInput>
+                </View>
+                <PasswordTextInput
+                    placeholder={'Digite sua nova senha'}
+                    onChangeText={(value) => { setSenha(value) }}
+                    value={senha}
+                ></PasswordTextInput>
+                <PasswordTextInput
+                    placeholder={'Digite novamente a nova senha'}
+                    onChangeText={(value) => { setSenhaConfirm(value) }}
+                    value={senhaConfirm}
+                ></PasswordTextInput>
             </View>
             <TouchableOpacity
                 style={FormStyles.buttonClickMe}
                 activeOpacity={0.7}
-                onPress={async () => { await redefinirSenha }}
+                onPress={redefinirSenha}
             >
                 <Text style={styles.textButton}>{'Redefinir'}</Text>
             </TouchableOpacity>
@@ -54,7 +112,7 @@ export default function Register() {
                 activeOpacity={0.7}
                 onPress={backToWelcome}
             >
-                <Text style={styles.textButton}>{'Entrar'}</Text>
+                <Text style={styles.textButton}>{'Login'}</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );

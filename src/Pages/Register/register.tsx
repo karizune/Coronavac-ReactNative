@@ -16,7 +16,8 @@ import Icon from 'react-native-vector-icons/AntDesign';
 //components
 import { TextButton } from '../../Components/Buttons/TextButton/TextButton';
 import Loading from '../../Components/Loading/Loading';
-import { CustomButton } from '../../Components/Buttons/CustomButton/CustomButton'
+import { CustomButton } from '../../Components/Buttons/CustomButton/CustomButton';
+import { PasswordTextInput } from '../../Components/TextInputs/PasswordInput/PasswordInput';
 
 import api from '../../Services/api';
 
@@ -87,33 +88,31 @@ export default function Register() {
             <Text></Text>
             <Text style={styles.TextHello}>{'Realize seu cadastro'}</Text>
             <Text></Text>
-            <View style={FormStyles.form}>
-                <TextInput
-                    style={FormStyles.textInput}
-                    placeholder={'Digite seu nome completo'}
-                    onChangeText={text => setUser(text)}
-                    value={txtUser}
-                />
-                <TextInput
-                    style={FormStyles.textInput}
-                    placeholder={'Digite seu email'}
-                    onChangeText={text => setEmail(text)}
-                    value={txtEmail}
-                />
-                <TextInput
-                    style={FormStyles.textInput}
-                    secureTextEntry={true}
+            <View>
+                <View style={FormStyles.form}>
+                    <TextInput
+                        style={FormStyles.textInput}
+                        placeholder={'Digite seu nome completo'}
+                        onChangeText={text => setUser(text)}
+                        value={txtUser}
+                    />
+                    <TextInput
+                        style={FormStyles.textInput}
+                        placeholder={'Digite seu email'}
+                        onChangeText={text => setEmail(text)}
+                        value={txtEmail}
+                    />
+                </View>
+                <PasswordTextInput
                     placeholder={'Digite sua Senha'}
                     onChangeText={text => setSenha(text)}
                     value={txtSenha}
-                />
-                <TextInput
-                    style={FormStyles.textInput}
-                    secureTextEntry={true}
+                ></PasswordTextInput>
+                <PasswordTextInput
                     placeholder={'Digite novamente sua senha'}
                     onChangeText={text => setSenhaConfirm(text)}
                     value={txtSenhaConfirm}
-                />
+                ></PasswordTextInput>
             </View>
             <View style={Registerstyles.Container}>
                 <CustomButton

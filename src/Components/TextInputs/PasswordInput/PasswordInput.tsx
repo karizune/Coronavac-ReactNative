@@ -14,15 +14,11 @@ interface PasswordTextInputProps extends TextInputProps {
 }
 
 
-export default function PasswordTextInput({ placeholder, ...rest }: PasswordTextInputProps) {
+export function PasswordTextInput({ ...rest }: PasswordTextInputProps) {
 
-    const [objPasswordConfig, setConfigForm] = React.useState<PasswordConfig>
-        ({ flShowPass: false, iconPass: 'eye' });
-    const [txtLogin, setLogin] = React.useState('')
-    const [txtSenha, setSenha] = React.useState('')
+    const [objPasswordConfig, setConfigForm] = React.useState<PasswordConfig>({ flShowPass: true, iconPass: 'eye-off' });
 
     function handleChangeIcon() {
-
         let icone = objPasswordConfig.iconPass === "eye" ? "eye-off" : "eye";
         let flShowPass = !objPasswordConfig.flShowPass;
         setConfigForm({ iconPass: icone, flShowPass });
@@ -31,9 +27,6 @@ export default function PasswordTextInput({ placeholder, ...rest }: PasswordText
         <View style={FormStyles.FormContainer}>
             <TextInput
                 style={FormStyles.textInputPassword}
-                placeholder={placeholder}
-                onChangeText={text => setSenha(text)}
-                value={txtSenha}
                 secureTextEntry={objPasswordConfig.flShowPass}
                 {...rest}
             />
@@ -49,17 +42,21 @@ export default function PasswordTextInput({ placeholder, ...rest }: PasswordText
 }
 
 const styles = StyleSheet.create({
-    loadingContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignContent: "center"
-    },
     container: {
+        backgroundColor: '#eb2a2a',
         flex: 1,
-        backgroundColor: 'white',
+    },
+    FormContainer: {
+        marginTop: '35%',
+        marginBottom: '-30%',
+        marginLeft: '10%',
+        marginRight: '10%',
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: 'white',
+        borderRadius: 50
     },
+
     textTitle: {
         color: 'red',
         fontSize: 28,
@@ -70,13 +67,6 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         borderRadius: 8,
         borderWidth: 1,
-        width: '70%',
-        marginBottom: 16,
-        paddingHorizontal: 8
-    },
-    textInputPassword: {
-        height: 40,
-        borderWidth: 0,
         width: '70%',
         marginBottom: 16,
         paddingHorizontal: 8
@@ -94,18 +84,9 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold'
     },
-    passwordContainer: {
-        marginBottom: 16,
-        height: 40,
-        borderColor: '#dcdce6',
-        borderRadius: 8,
-        borderWidth: 1,
-        width: '70%',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
     iconEye: {
         paddingHorizontal: 8,
         marginTop: 6
-    }
+    },
+
 });
