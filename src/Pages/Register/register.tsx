@@ -14,6 +14,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 //components
+import { TextButton } from '../../Components/Buttons/TextButton/TextButton';
 import Loading from '../../Components/Loading/Loading';
 import { CustomButton } from '../../Components/Buttons/CustomButton/CustomButton'
 
@@ -38,7 +39,7 @@ export default function Register() {
     const [flLoading, setLoading] = React.useState(false)
 
     function backToWelcome() {
-        navigation.goBack();
+        navigation.navigate('Login');
     }
 
     if (flLoading) {
@@ -81,61 +82,61 @@ export default function Register() {
     }
 
     return (
-        <ScrollView>
-            <SafeAreaView style={styles.SafeArea}>
-                <View style={styles.container}>
-                    <Icon name='adduser' size={150} color={'red'}></Icon>
-                    <Text></Text>
-                    <Text style={styles.TextHello}>{'Realize seu cadastro'}</Text>
-                    <Text></Text>
-                    <View style={FormStyles.form}>
-                        <TextInput
-                            style={FormStyles.textInput}
-                            placeholder={'Digite o nome de usuario'}
-                            onChangeText={text => setUser(text)}
-                            value={txtUser}
-                        />
-                        <TextInput
-                            style={FormStyles.textInput}
-                            placeholder={'Digite seu email'}
-                            onChangeText={text => setEmail(text)}
-                            value={txtEmail}
-                        />
-                        <TextInput
-                            style={FormStyles.textInput}
-                            secureTextEntry={true}
-                            placeholder={'Digite sua Senha'}
-                            onChangeText={text => setSenha(text)}
-                            value={txtSenha}
-                        />
-                        <TextInput
-                            style={FormStyles.textInput}
-                            secureTextEntry={true}
-                            placeholder={'Digite novamente sua senha'}
-                            onChangeText={text => setSenhaConfirm(text)}
-                            value={txtSenhaConfirm}
-                        />
-                    </View>
-
-                    <View style={Registerstyles.Container}>
-                        <CustomButton
-                            title={'Cadastrar'}
-                            onPress={realizeRegister}
-                        />
-                    </View>
-                    <View style={Registerstyles.Container}>
-                        <CustomButton
-                            title={'Entrar'}
-                            onPress={backToWelcome}
-                        />
-                    </View>
-                </View>
-            </SafeAreaView>
-        </ScrollView>
+        <SafeAreaView style={styles.SafeArea}>
+            <Icon name='adduser' size={150} color={'red'}></Icon>
+            <Text></Text>
+            <Text style={styles.TextHello}>{'Realize seu cadastro'}</Text>
+            <Text></Text>
+            <View style={FormStyles.form}>
+                <TextInput
+                    style={FormStyles.textInput}
+                    placeholder={'Digite seu nome completo'}
+                    onChangeText={text => setUser(text)}
+                    value={txtUser}
+                />
+                <TextInput
+                    style={FormStyles.textInput}
+                    placeholder={'Digite seu email'}
+                    onChangeText={text => setEmail(text)}
+                    value={txtEmail}
+                />
+                <TextInput
+                    style={FormStyles.textInput}
+                    secureTextEntry={true}
+                    placeholder={'Digite sua Senha'}
+                    onChangeText={text => setSenha(text)}
+                    value={txtSenha}
+                />
+                <TextInput
+                    style={FormStyles.textInput}
+                    secureTextEntry={true}
+                    placeholder={'Digite novamente sua senha'}
+                    onChangeText={text => setSenhaConfirm(text)}
+                    value={txtSenhaConfirm}
+                />
+            </View>
+            <View style={Registerstyles.Container}>
+                <CustomButton
+                    title={'Cadastrar'}
+                    onPress={realizeRegister}
+                />
+            </View>
+            <View style={Registerstyles.RealizarLoginContainer}>
+                <Text>Já é membro? </Text>
+                <TextButton
+                    title={'Realizar Login agora'}
+                    onPress={backToWelcome}
+                    style={{ height: 40 }}
+                />
+            </View>
+        </SafeAreaView>
     );
 }
 const Registerstyles = StyleSheet.create({
     Container: {
-        paddingTop: '5%'
+    },
+    RealizarLoginContainer: {
+        paddingTop: '5%',
+        flexDirection: 'row'
     }
 })

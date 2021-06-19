@@ -2,16 +2,16 @@ import { useNavigation } from '@react-navigation/core';
 import React from 'react';
 import {
     Text,
-    TouchableOpacity,
     View,
     Image,
     Alert,
     StyleSheet,
     SafeAreaView,
-    KeyboardAvoidingView
+    ImageBackground
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { TextInput } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import api from '../../Services/api';
 import styles from '../../Styles/mainStyle';
@@ -32,6 +32,17 @@ interface LoginProps {
     senha: string
 }
 
+interface UserLoggedProps {
+    cpf?: string
+    email: string,
+    senha: string,
+    nome: string,
+    imc?: number,
+    peso?: number,
+    altura?: number,
+}
+
+
 export default function Login() {
     const navigation = useNavigation();
     const [txtLogin, setLogin] = React.useState('')
@@ -39,6 +50,10 @@ export default function Login() {
     const [flLoading, setLoading] = React.useState(false)
     const [objPasswordConfig, setConfigForm] = React.useState<PasswordConfig>
         ({ flShowPass: true, iconPass: 'eye-off' });
+
+    const [userLogged, setUserLogged] = React.useState<UserLoggedProps>({ nome: '', email: '', senha: '' });
+
+    const backgroundImage = { uri: 'https://acegif.com/wp-content/gif/outerspace-54.gif' }
 
     function handleChangeIcon() {
         let icone = objPasswordConfig.iconPass === "eye" ? "eye-off" : "eye";
@@ -58,22 +73,28 @@ export default function Login() {
             Alert.alert('Atenção: Falha no Login', 'Senha é obrigatório');
             return;
         }
+
         setLoading(true);
-
-
-        await api.post(`/paciente/Login`, objLogin)
-            .then((response) => {
-                if (response.data.auth) {
-                    navigateToInitialPage();
-                    setLoading(false);
-                }
-            }).catch(e => {
-                Object.values(e.response.data).map((item) => {
-                    errors.push(`${item}`);
-                })
-                setLoading(false)
-                Alert.alert('Aviso', `${errors}`)
+        try {
+            const response = await api.post(`/paciente/Login`, objLogin);
+            console.log(response.data)
+            if (response.data.auth) {
+                setUserLogged(response.data.pacienteRetorno);
+                await AsyncStorage.setItem('@Coronavac:Username', response.data.pacienteRetorno.nome)
+                    .then(
+                        () => {
+                            navigateToInitialPage();
+                            setLoading(false);
+                        })
+            }
+        }
+        catch (e) {
+            Object.values(e.response.data).map((item) => {
+                errors.push(`${item}`);
             })
+            setLoading(false)
+            Alert.alert('Aviso', `${errors}`)
+        }
     }
 
     function navigateToInitialPage() {
@@ -93,67 +114,79 @@ export default function Login() {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Image
-                style={{ width: '50%', height: '30%' }}
-                source={require('../../resources/injection.jpg')}
-            />
-            <View style={{ paddingBottom: '5%' }}>
-                <Text style={styles.TextHello}>{'Bem Vindo ao CoronaVac Mobile'}</Text>
-            </View>
-            <View style={FormStyles.form}>
-                <View style={FormStyles.FormContainer}>
-                    <TextInput
-                        style={FormStyles.textInputUser}
-                        placeholder={'Digite seu email'}
-                        onChangeText={text => setLogin(text)}
-                        value={txtLogin}
-                    ></TextInput>
-                </View>
-                <View style={FormStyles.FormContainer}>
-                    <TextInput
-                        style={FormStyles.textInputPassword}
-                        placeholder="Senha"
-                        onChangeText={text => setSenha(text)}
-                        value={txtSenha}
-                        secureTextEntry={objPasswordConfig.flShowPass}
-                    />
-                    <Feather
-                        style={LoginStyles.iconEye}
-                        name={objPasswordConfig.iconPass}
-                        size={25}
-                        color={'red'}
-                        onPress={handleChangeIcon}
-                    />
-                </View>
-            </View>
-            <CustomButton
-                title={'Entrar'}
-                onPress={RealizeLogin}
-            />
-            <TextButton
-                title={'Esqueceu a senha?'}
-                onPress={navigateToResetPassword}
-                style={{ paddingTop: '5%' }}
-            />
-            <View style={{ flexDirection: 'row', paddingTop: '5%' }}>
-                <Text style={{ color: 'black' }}>{"Ainda não é membro? "}</Text>
-                <TextButton
-                    title={'Cadastrar-se'}
-                    onPress={navigateToRegister}
+        <SafeAreaView style={LoginStyles.container}>
+            <View style={LoginStyles.FormContainer}>
+                <Image
+                    style={{ width: '50%', height: '30%', justifyContent: 'center', position: 'relative' }}
+                    source={require('../../resources/injection.jpg')}
                 />
+                <View style={{ paddingBottom: '5%' }}>
+                    <Text style={styles.TextHello}>{'Bem Vindo ao CoronaVac Mobile'}</Text>
+                </View>
+                <View style={FormStyles.form}>
+                    <View style={FormStyles.FormContainer}>
+                        <TextInput
+                            style={FormStyles.textInputUser}
+                            placeholder={'Digite seu email'}
+                            onChangeText={text => setLogin(text)}
+                            value={txtLogin}
+                        />
+                    </View>
+                    <View style={FormStyles.FormContainer}>
+                        <TextInput
+                            style={FormStyles.textInputPassword}
+                            placeholder="Senha"
+                            onChangeText={text => setSenha(text)}
+                            value={txtSenha}
+                            secureTextEntry={objPasswordConfig.flShowPass}
+                        />
+                        <Feather
+                            style={LoginStyles.iconEye}
+                            name={objPasswordConfig.iconPass}
+                            size={25}
+                            color={'red'}
+                            onPress={handleChangeIcon}
+                        />
+                    </View>
+                </View>
+                <CustomButton
+                    title={'Entrar'}
+                    onPress={RealizeLogin}
+                />
+                <TextButton
+                    title={'Esqueceu a senha?'}
+                    onPress={navigateToResetPassword}
+                    style={{ paddingTop: '5%', height: 40 }}
+                />
+                <View style={{ flexDirection: 'row', paddingTop: '2%' }}>
+                    <Text style={{ color: 'black' }}>{"Ainda não é membro? "}</Text>
+                    <TextButton
+                        title={'Cadastrar-se'}
+                        onPress={navigateToRegister}
+                        style={{ height: 40 }}
+                    />
+                </View>
             </View>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }
 
 const LoginStyles = StyleSheet.create({
     container: {
+        backgroundColor: '#eb2a2a',
         flex: 1,
-        backgroundColor: 'white',
+    },
+    FormContainer: {
+        marginTop: '35%',
+        marginBottom: '-30%',
+        marginLeft: '10%',
+        marginRight: '10%',
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: 'white',
+        borderRadius: 50
     },
+
     textTitle: {
         color: 'red',
         fontSize: 28,
@@ -164,13 +197,6 @@ const LoginStyles = StyleSheet.create({
         borderColor: 'gray',
         borderRadius: 8,
         borderWidth: 1,
-        width: '70%',
-        marginBottom: 16,
-        paddingHorizontal: 8
-    },
-    textInputPassword: {
-        height: 40,
-        borderWidth: 0,
         width: '70%',
         marginBottom: 16,
         paddingHorizontal: 8
@@ -188,18 +214,9 @@ const LoginStyles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold'
     },
-    passwordContainer: {
-        marginBottom: 16,
-        height: 40,
-        borderColor: '#dcdce6',
-        borderRadius: 8,
-        borderWidth: 1,
-        width: '70%',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
     iconEye: {
         paddingHorizontal: 8,
         marginTop: 6
-    }
+    },
+
 });

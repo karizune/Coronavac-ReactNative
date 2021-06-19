@@ -36,9 +36,9 @@ const FormStyles = StyleSheet.create({
     textInputPassword: {
         height: 40,
         borderWidth: 0,
-        width: '84%',
+        width: '80%',
         marginBottom: 16,
-        paddingHorizontal: 8,
+        marginLeft: 10
     },
     FormContainer: {
         marginBottom: 16,
@@ -46,10 +46,10 @@ const FormStyles = StyleSheet.create({
         borderColor: 'gray',
         borderRadius: 8,
         borderWidth: 1,
-        width: '70%',
+        width: 250,
         flexDirection: 'row',
         justifyContent: 'space-between'
     }
 });
 
-export default FormStyles;
+export default FormStyles

@@ -2,15 +2,20 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
 
-    SafeArea: {
+    SafeAreaRegister: {
+        flex: 1,
         paddingTop: '20%',
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    SafeArea: {
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
     },
     container: {
-        flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',

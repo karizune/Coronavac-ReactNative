@@ -4,30 +4,33 @@ import {
     Text,
     TouchableOpacity,
     View,
-    Alert
+    Alert,
+    SafeAreaView
 } from 'react-native';
 import styles from '../../Styles/mainStyle';
 import FormStyles from '../../Styles/formStyle';
 import { TextInput } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/AntDesign';
+import api from '../../Services/api';
 
 export default function Register() {
     const navigation = useNavigation();
 
     function backToWelcome() {
-        navigation.goBack();
+        navigation.navigate('Login');
     }
 
-    function redefinirSenha() {
+    async function redefinirSenha(cadastroAtualizado: object) {
+        await api.put(``, cadastroAtualizado)
         Alert.alert(
             '',
             'Senha redefinida',
         );
-        navigation.goBack();
+        navigation.navigate('Login');
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.SafeArea}>
             <Icon name='unlock' size={150} color={'red'}></Icon>
             <Text></Text>
             <Text style={styles.TextHello}>{'Redefinir senha'}</Text>
@@ -41,7 +44,7 @@ export default function Register() {
             <TouchableOpacity
                 style={FormStyles.buttonClickMe}
                 activeOpacity={0.7}
-                onPress={redefinirSenha}
+                onPress={async () => { await redefinirSenha }}
             >
                 <Text style={styles.textButton}>{'Redefinir'}</Text>
             </TouchableOpacity>
@@ -53,6 +56,6 @@ export default function Register() {
             >
                 <Text style={styles.textButton}>{'Entrar'}</Text>
             </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     );
 }

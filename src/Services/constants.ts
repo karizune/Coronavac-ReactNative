@@ -1,0 +1,1 @@
+export const UserImageURL = 'https://scontent.faax1-1.fna.fbcdn.net/v/t1.6435-1/p160x160/67931040_1323634117812870_88219848030552064_n.jpg?_nc_cat=100&ccb=1-3&_nc_sid=7206a8&_nc_ohc=u5KwV3r4AHQAX_K21Mx&_nc_ht=scontent.faax1-1.fna&tp=6&oh=0bdb07fc3607238837c275406235447f&oe=60CE57D6'
