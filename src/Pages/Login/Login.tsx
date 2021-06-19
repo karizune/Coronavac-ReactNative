@@ -28,16 +28,6 @@ interface LoginProps {
     senha: string
 }
 
-interface UserLoggedProps {
-    cpf?: string
-    email: string,
-    senha: string,
-    nome: string,
-    imc?: number,
-    peso?: number,
-    altura?: number,
-}
-
 
 export default function Login() {
     const navigation = useNavigation();
@@ -46,7 +36,6 @@ export default function Login() {
     const [flLoading, setLoading] = React.useState(false)
 
 
-    const [userLogged, setUserLogged] = React.useState<UserLoggedProps>({ nome: '', email: '', senha: '' });
 
     const backgroundImage = { uri: 'https://acegif.com/wp-content/gif/outerspace-54.gif' }
 
@@ -67,8 +56,7 @@ export default function Login() {
             const response = await api.post(`/paciente/Login`, objLogin);
             console.log(response.data)
             if (response.data.auth) {
-                setUserLogged(response.data.pacienteRetorno);
-                await AsyncStorage.setItem('@Coronavac:Username', response.data.pacienteRetorno.nome)
+                await AsyncStorage.setItem('@Coronavac:Username', response.data.usuario.nome)
                     .then(
                         () => {
                             navigateToInitialPage();
