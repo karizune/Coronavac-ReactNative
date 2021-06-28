@@ -53,7 +53,7 @@ export default function initialPage() {
                     <FlatList
                         data={listVaccine}
                         renderItem={({ item }) => (
-                            <OptionButton title={item.title} active onPress={() => { alert('Não pode tomar') }} />
+                            <OptionButton title={item.title} active onPress={() => { Alert.alert('Aviso:', 'Não pode tomar') }} />
                         )}
                         keyExtractor={(item, index) => index.toString()}
                         showsVerticalScrollIndicator={false}
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         color: 'white'
     },
     vaccineListCss: {
-
+        marginTop: '20%'
     },
     itemVaccineCSS: {
 

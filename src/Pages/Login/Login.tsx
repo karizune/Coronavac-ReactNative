@@ -7,7 +7,8 @@ import {
     Alert,
     StyleSheet,
     SafeAreaView,
-    ImageBackground
+    ImageBackground,
+    PanResponder
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { TextInput } from 'react-native-gesture-handler';
@@ -31,18 +32,14 @@ interface LoginProps {
 
 export default function Login() {
     const navigation = useNavigation();
-    const [txtLogin, setLogin] = React.useState('')
+    const [txtEmail, setLogin] = React.useState('')
     const [txtSenha, setSenha] = React.useState('')
     const [flLoading, setLoading] = React.useState(false)
 
-
-
-    const backgroundImage = { uri: 'https://acegif.com/wp-content/gif/outerspace-54.gif' }
-
     async function RealizeLogin() {
         let errors: Array<string> = []
-        let objLogin: LoginProps = { email: txtLogin, senha: txtSenha };
-        if (txtLogin.trim() === '') {
+        let objLogin: LoginProps = { email: txtEmail, senha: txtSenha };
+        if (txtEmail.trim() === '') {
             Alert.alert('Atenção: Falha no Login', 'Usuário é obrigatório');
             return;
         }
@@ -54,28 +51,42 @@ export default function Login() {
         setLoading(true);
         try {
             const response = await api.post(`/paciente/Login`, objLogin);
-            console.log(response.data)
-            if (response.data.auth) {
+            if (response.data != undefined && response.data.needMoreInfo != undefined && response.data.needMoreInfo) {
+                await AsyncStorage.setItem('@Coronavac:email', txtEmail)
+                await AsyncStorage.setItem('@Coronavac:Username', response.data.usuarioRetorno.nome)
+                    .then(() => {
+                        navigation.navigate('completeRegister');
+                        setLoading(false);
+                    })
+            }
+            else if (response.data.auth) {
                 await AsyncStorage.setItem('@Coronavac:Username', response.data.usuario.nome)
+                await AsyncStorage.setItem('@Coronavac:email', response.data.usuario.email)
+                await AsyncStorage.setItem('@Coronavac:urlImage', response.data.usuario.urlImage)
                     .then(
                         () => {
-                            navigateToInitialPage();
+                            navigation.navigate('initialPage');
                             setLoading(false);
                         })
             }
+            else {
+                Alert.alert('Aviso', 'Algo deu errado, favor tentar novamente')
+            }
         }
         catch (e) {
-            Object.values(e.response.data).map((item) => {
-                errors.push(`${item}`);
-            })
-            setLoading(false)
-            Alert.alert('Aviso', `${errors}`)
+            if (e.response != undefined && e.response.data != undefined) {
+                Object.values(e.response.data).map((item) => {
+                    errors.push(`${item}`);
+                })
+                setLoading(false)
+                Alert.alert('Aviso', `${errors}`)
+            }
+            else {
+                setLoading(false)
+                Alert.alert('Aviso', `${e}`)
+            }
         }
     }
-
-    function navigateToInitialPage() {
-        navigation.navigate('initialPage');
-    };
 
     function navigateToResetPassword() {
         navigation.navigate('ResetPassword');
@@ -90,6 +101,7 @@ export default function Login() {
     }
 
     return (
+
         <SafeAreaView style={LoginStyles.container}>
             <View style={LoginStyles.FormContainer}>
                 <Image
@@ -105,7 +117,7 @@ export default function Login() {
                             style={FormStyles.textInputUser}
                             placeholder={'Digite seu email'}
                             onChangeText={text => setLogin(text)}
-                            value={txtLogin}
+                            value={txtEmail}
                         />
                     </View>
                     <PasswordTextInput
@@ -133,6 +145,7 @@ export default function Login() {
                 </View>
             </View>
         </SafeAreaView >
+
     );
 }
 
@@ -182,6 +195,6 @@ const LoginStyles = StyleSheet.create({
     iconEye: {
         paddingHorizontal: 8,
         marginTop: 6
-    },
+    }
 
 });

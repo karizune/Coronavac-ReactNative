@@ -1,9 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    // baseURL: 'http://192.168.1.110:3333'
-    baseURL: 'http://192.168.1.100:3333'
-    // baseURL: 'https://coronavac.herokuapp.com/'
+    baseURL: 'https://coronavac-typescript.herokuapp.com/'
 });
 
 export default api;

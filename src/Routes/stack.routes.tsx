@@ -7,6 +7,8 @@ import Register from '../Pages/Register/register'
 import ResetPassword from '../Pages/ResetPassword/ResetPassword'
 import initialPage from '../Pages/InitialPage/initialPage'
 import Login from '../Pages/Login/Login';
+import completeRegister from '../Pages/Register/completeRegister'
+import UserPage from '../Pages/userPage/userPage'
 
 
 
@@ -40,6 +42,14 @@ const AppRoutes: React.FC = () => (
         <stackRoutes.Screen
             name="IMC"
             component={IMC}
+        />
+        <stackRoutes.Screen
+            name="completeRegister"
+            component={completeRegister}
+        />
+        <stackRoutes.Screen
+            name="UserPage"
+            component={UserPage}
         />
     </stackRoutes.Navigator>
 )
